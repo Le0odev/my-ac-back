@@ -10,7 +10,12 @@ module.exports = {
             // verificando existencia
             const empresaExistente = await Empresa.findOne({where: { email }});
             if (empresaExistente) {
-                return res.status(400).json({error: 'Email já cadastrado'});
+                return res.status(400).json({ message: 'Email já cadastrado' });
+            }
+
+            const empresaExistenteCnpj = await Empresa.findOne({ where: { cnpj } });
+            if (empresaExistenteCnpj) {
+                return res.status(400).json({ message: 'CPF já cadastrado' });
             }
 
             // senha criptografada
