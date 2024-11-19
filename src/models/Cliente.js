@@ -41,15 +41,26 @@ Cliente.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'cliente', 
+    },
+    empresaId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Empresas', // Nome da tabela Empresas
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    },
   },
   {
     sequelize,
     modelName: 'Cliente',
-  },
-  {
-    sequelize,
-    modelName: 'Cliente',
-    tableName: 'Clientes', // Definindo o nome da tabela explicitamente
+    tableName: 'Clientes', // Nome da tabela definido explicitamente
   }
 );
 

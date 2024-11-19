@@ -46,10 +46,22 @@ Prestador.init (
             type: DataTypes.STRING,
             allowNull: true,
         },
-    },{
-        sequelize,
-        modelName: 'Prestador',
-      },
+        role: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            defaultValue: 'prestador', 
+          },
+        empresaId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+              model: 'Empresas', // Nome da tabela Empresas
+              key: 'id',
+            },
+            onUpdate: 'CASCADE',
+            onDelete: 'CASCADE',
+          },
+    },
     {
         sequelize,
         modelName: "Prestador",

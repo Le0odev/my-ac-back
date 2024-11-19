@@ -22,9 +22,16 @@ Estoque.init(
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-  },{
-    sequelize,
-    modelName: 'Estoque',
+    empresaId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Empresas', // Nome da tabela Empresas
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    },
   },
   {
     sequelize,

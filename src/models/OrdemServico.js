@@ -58,9 +58,16 @@ OrdemServico.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-  },{
-    sequelize,
-    modelName: 'OrdemServico',
+    empresaId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Empresas', // Nome da tabela Empresas
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    },
   },
   {
     sequelize,

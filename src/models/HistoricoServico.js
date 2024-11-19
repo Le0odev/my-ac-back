@@ -12,16 +12,23 @@ HistoricoServico.init(
     data_registro: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: DataTypes.NOW,
+      defaultValue: DataTypes.NOW,  // Se você deseja que a data de registro seja automática
     },
-  },{
-    sequelize,
-    modelName: 'HistoricoServico',
+    empresaId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Empresas', // Nome da tabela 'Empresas'
+        key: 'id',         // Chave estrangeira referenciando a chave primária de Empresas
+      },
+      onUpdate: 'CASCADE',    // Atualiza os registros relacionados se o valor na tabela 'Empresas' mudar
+      onDelete: 'CASCADE',    // Deleta os registros relacionados se o registro na tabela 'Empresas' for removido
+    },
   },
   {
     sequelize,
     modelName: 'HistoricoServico',
-    tableName: 'historico_servicos', // Definindo o nome da tabela explicitamente
+    tableName: 'historico_servicos', // Certifique-se de que o nome da tabela está correto
   }
 );
 

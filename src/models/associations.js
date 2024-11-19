@@ -3,8 +3,8 @@ const Prestador = require('./Prestador');
 const Empresa = require('./Empresa');
 const Estoque = require('./Estoque');
 const RelatorioServico = require('./RelatorioServico');
-const OrdemServico = require('./ordemServico');
-const HistoricoServico = require('./HistoricoServico'); // Novo modelo
+const OrdemServico = require('./OrdemServico');
+const HistoricoServico = require('./HistoricoServico');
 
 module.exports = () => {
   // Relacionamentos já existentes
@@ -14,23 +14,30 @@ module.exports = () => {
   Prestador.hasMany(OrdemServico, { foreignKey: 'prestador_id' });
   OrdemServico.belongsTo(Prestador, { foreignKey: 'prestador_id' });
 
-  Empresa.hasMany(Cliente, { foreignKey: 'empresa_id' });
-  Cliente.belongsTo(Empresa, { foreignKey: 'empresa_id' });
+  Empresa.hasMany(Cliente, { foreignKey: 'empresaId' });
+  Cliente.belongsTo(Empresa, { foreignKey: 'empresaId' });
 
-  Empresa.hasMany(Prestador, { foreignKey: 'empresa_id' });
-  Prestador.belongsTo(Empresa, { foreignKey: 'empresa_id' });
+  Empresa.hasMany(Prestador, { foreignKey: 'empresaId' });
+  Prestador.belongsTo(Empresa, { foreignKey: 'empresaId' });
 
-  Empresa.hasMany(Estoque, { foreignKey: 'empresa_id' });
-  Estoque.belongsTo(Empresa, { foreignKey: 'empresa_id' });
+  Empresa.hasMany(Estoque, { foreignKey: 'empresaId' });
+  Estoque.belongsTo(Empresa, { foreignKey: 'empresaId' });
 
   OrdemServico.hasMany(RelatorioServico, { foreignKey: 'ordem_servico_id' });
   RelatorioServico.belongsTo(OrdemServico, { foreignKey: 'ordem_servico_id' });
 
-  // Novo relacionamento: OrdemServico com HistoricoServico
+  // Relacionamento com empresaId no RelatorioServico
+  Empresa.hasMany(RelatorioServico, { foreignKey: 'empresaId' });
+  RelatorioServico.belongsTo(Empresa, { foreignKey: 'empresaId' });
+
   OrdemServico.hasMany(HistoricoServico, { foreignKey: 'ordem_servico_id' });
   HistoricoServico.belongsTo(OrdemServico, { foreignKey: 'ordem_servico_id' });
 
-  // Opcional: Relacionar HistoricoServico com Prestador (quem fez a ação no histórico)
+  // Relacionamento com empresaId no HistoricoServico
+  Empresa.hasMany(HistoricoServico, { foreignKey: 'empresaId' });
+  HistoricoServico.belongsTo(Empresa, { foreignKey: 'empresaId' });
+
+  // Relacionar HistoricoServico com Prestador (quem fez a ação no histórico)
   Prestador.hasMany(HistoricoServico, { foreignKey: 'prestador_id' });
   HistoricoServico.belongsTo(Prestador, { foreignKey: 'prestador_id' });
 };
