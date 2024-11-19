@@ -1,39 +1,49 @@
 const Prestador = require('../models/Prestador');
 const Empresa = require('../models/Empresa');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 
 module.exports = {
   async register(req, res) {
     try {
-      const { nome, email, senha, empresaId } = req.body;
-
+      console.log("Dados recebidos:", req.body);
+  
+      const { nome, email, senha, empresaId, cpf, status, especialidade, anos_experiencia, certificados, telefone } = req.body;
+  
       // Verificando se a empresa existe
       const empresa = await Empresa.findByPk(empresaId);
       if (!empresa) {
-        return res.status(400).json({ message: 'Empresa não encontrada' });
+        console.log("Empresa não encontrada para o ID:", empresaId);
+        return res.status(400).json({ message: "Empresa não encontrada" });
       }
-
-      // Verificando se o email do prestador já está cadastrado
+  
       const prestadorExistente = await Prestador.findOne({ where: { email } });
       if (prestadorExistente) {
-        return res.status(400).json({ message: 'Email já cadastrado' });
+        console.log("Email já registrado:", email);
+        return res.status(400).json({ message: "Email já cadastrado" });
       }
-
-      // Criptografando a senha do prestador
+  
       const hashedPassword = await bcrypt.hash(senha, 10);
-
-      // Criando o prestador e associando à empresa
+  
       const novoPrestador = await Prestador.create({
         nome,
         email,
         senha: hashedPassword,
-        empresaId,  // Associando o prestador à empresa
+        cpf,
+        empresaId,
+        status, 
+        especialidade, 
+        anos_experiencia, 
+        certificados, 
+        telefone
       });
-
-      res.status(201).json({ message: 'Prestador criado com sucesso', prestador: novoPrestador });
+  
+      console.log("Prestador criado com sucesso:", novoPrestador);
+      res.status(201).json({ message: "Prestador criado com sucesso", prestador: novoPrestador });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Erro ao registrar prestador' });
+      console.error("Erro ao registrar prestador:", error.message);
+      res.status(500).json({ error: "Erro ao registrar prestador", details: error.message });
     }
   },
 

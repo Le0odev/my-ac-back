@@ -9,7 +9,7 @@ router.post('/register', empresaController.register);
 // Rota de login - sem restrições
 router.post('/login', empresaController.login);
 
-router.get('/admin-dashboard', authorize(['empresa']), (req, res) => {
+router.get('/empresa-dashboard', authorize(['empresa']), (req, res) => {
     res.json({ message: 'Bem-vindo ao painel de administração!' });
 });
 

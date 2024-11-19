@@ -3,70 +3,71 @@ const sequelize = require("../config/database");
 
 class Prestador extends Model {}
 
-Prestador.init (
-    {
-        nome: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        email: {
-            type: DataTypes.STRING,
-            allowNull:false,
-            unique:true,
-            validate: {
-                isEmail: true,
-            },
-        },
-        telefone: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        senha: {
-            type: DataTypes.STRING,
-            allowNull: false,
-        },
-        cpf:{
-            type: DataTypes.STRING,
-            allowNull: false,
-            unique: true,
-        },
-        especialidade: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        anos_experiencia: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        certificados: {
-            type: DataTypes.TEXT,
-            allowNull: true,
-        },
-        status: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        role: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            defaultValue: 'prestador', 
-          },
-        empresaId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            references: {
-              model: 'Empresas', // Nome da tabela Empresas
-              key: 'id',
-            },
-            onUpdate: 'CASCADE',
-            onDelete: 'CASCADE',
-          },
+Prestador.init(
+  {
+    nome: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    {
-        sequelize,
-        modelName: "Prestador",
-        tableName: "prestadores", //Definindo a table name
-    }
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: {
+        isEmail: true,
+      },
+    },
+    telefone: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    senha: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    cpf: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    especialidade: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    anos_experiencia: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    certificados: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    status: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: 'ativo',
+    },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'prestador',
+    },
+    empresaId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'Empresas', // Nome da tabela (case-sensitive)
+        key: 'id',
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    },
+  },
+  {
+    sequelize,
+    modelName: 'Prestador',
+    tableName: 'prestadores', // Nome da tabela no banco
+  }
 );
 
 module.exports = Prestador;
