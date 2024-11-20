@@ -3,8 +3,8 @@ const Prestador = require('./Prestador');
 const Empresa = require('./Empresa');
 const Estoque = require('./Estoque');
 const RelatorioServico = require('./RelatorioServico');
-const OrdemServico = require('./OrdemServico');
 const HistoricoServico = require('./HistoricoServico');
+const OrdemServico = require('./ordemServico');
 
 module.exports = () => {
   // Relacionamentos já existentes

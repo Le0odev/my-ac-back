@@ -13,21 +13,6 @@ OrdemServico.init(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    empresa_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false, 
-    },
-    criador_tipo: {
-      type: DataTypes.STRING,
-      allowNull: false, 
-      validate: {
-        isIn: [['cliente', 'empresa']], 
-      },
-    },
-    criador_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false, 
-    },
     status: {
       type: DataTypes.STRING,
       allowNull: false,
