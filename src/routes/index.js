@@ -5,11 +5,15 @@ const router = express.Router();
 const clienteRoutes = require('./clienteRoutes');
 const empresaRoutes = require('./empresaRoutes');
 const prestadorRoutes = require('./prestadorRoutes');
-const ordemServicoRoutes = require('./ordemServicoRoutes')
+const ordemServicoRoutes = require('./ordemServicoRoutes');
+const historicoServicoRoutes = require('./historicoServicoRoutes');
+
 // Usando as rotas nas rotas principais
 router.use(clienteRoutes);
 router.use(empresaRoutes);
-router.use(prestadorRoutes)
-router.use(ordemServicoRoutes)
+router.use(prestadorRoutes);
+router.use(ordemServicoRoutes);
+router.use(historicoServicoRoutes);
+
 
 module.exports = router;

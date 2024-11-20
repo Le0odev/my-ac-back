@@ -7,7 +7,7 @@ class OrdemServicoController {
   // Criar uma nova Ordem de Serviço
   static async createServiceOrder(req, res) {
     try {
-      const { empresaId, descricao, cliente_id, prioridade, endereco_servico, data_estimativa, custo_estimado, anexos } = req.body;
+      const { empresaId, descricao, cliente_id, prioridade, endereco_servico, data_estimativa, custo_estimado, anexos, prestador_id} = req.body;
 
       // Verificar se a empresa existe
       const company = await Empresa.findByPk(empresaId);
@@ -20,11 +20,13 @@ class OrdemServicoController {
         empresaId,
         descricao,
         cliente_id,
+        prestador_id,
         prioridade,
         endereco_servico,
         data_estimativa,
         custo_estimado,
         anexos,
+        
       });
 
       return res.status(201).json(newOrder);
@@ -38,28 +40,29 @@ class OrdemServicoController {
   static async listServiceOrdersByCompany(req, res) {
     try {
       const { empresaId } = req.params;
-
+  
       // Verificar se a empresa existe
       const company = await Empresa.findByPk(empresaId);
       if (!company) {
         return res.status(404).json({ error: 'Empresa não encontrada' });
       }
-
+  
       // Buscar as ordens de serviço para a empresa
       const orders = await OrdemServico.findAll({
         where: { empresaId },
         include: [
           { model: Cliente, attributes: ['id', 'nome'] },
-          { model: Prestador, attributes: ['id', 'nome'] },
+          { model: Prestador, as: 'Prestador', attributes: ['id', 'nome'] }, // Usar alias definido
         ],
       });
-
+  
       return res.status(200).json(orders);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ error: 'Erro ao buscar Ordens de Serviço' });
     }
   }
+  
 
   // Atualizar uma Ordem de Serviço
   static async updateServiceOrder(req, res) {
