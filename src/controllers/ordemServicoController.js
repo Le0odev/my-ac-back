@@ -1,4 +1,4 @@
-const OrdemServico = require('../models/ordemServico');
+const OrdemServico = require('../models/OrdemServico');
 const Empresa = require('../models/Empresa');
 const Cliente = require('../models/Cliente');
 const Prestador = require('../models/Prestador');

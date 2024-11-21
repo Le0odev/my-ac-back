@@ -4,7 +4,7 @@ const Empresa = require('./Empresa');
 const Estoque = require('./Estoque');
 const RelatorioServico = require('./RelatorioServico');
 const HistoricoServico = require('./HistoricoServico');
-const OrdemServico = require('./ordemServico');
+const OrdemServico = require('./OrdemServico');
 
 module.exports = () => {
   // Relacionamento Cliente e OrdemServico
@@ -24,12 +24,14 @@ module.exports = () => {
   Estoque.belongsTo(Empresa, { foreignKey: 'empresaId' });
 
   // Relacionamento OrdemServico e RelatorioServico
-  OrdemServico.hasMany(RelatorioServico, { foreignKey: 'ordem_servico_id' });
-  RelatorioServico.belongsTo(OrdemServico, { foreignKey: 'ordem_servico_id' });
+  OrdemServico.hasMany(RelatorioServico, { foreignKey: 'ordemServicoId', as: "ordemServico" });
+  RelatorioServico.belongsTo(OrdemServico, { foreignKey: 'ordemServicoId', as: 'ordemServico' });
 
   // Relacionamento Empresa e RelatorioServico
-  Empresa.hasMany(RelatorioServico, { foreignKey: 'empresaId' });
-  RelatorioServico.belongsTo(Empresa, { foreignKey: 'empresaId' });
+  Empresa.hasMany(RelatorioServico, { foreignKey: 'empresaId', as: 'relatorios' });
+  RelatorioServico.belongsTo(Empresa, { foreignKey: 'empresaId',  as: 'empresa' });
+  RelatorioServico.belongsTo(Prestador, { foreignKey: 'prestadorId', as: 'prestador' });
+
 
   // Relacionamento OrdemServico e HistoricoServico
   OrdemServico.hasMany(HistoricoServico, { foreignKey: 'ordem_servico_id' });

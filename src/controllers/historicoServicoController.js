@@ -1,11 +1,13 @@
 const HistoricoServico = require('../models/HistoricoServico');
 const Empresa = require('../models/Empresa');
+const OrdemServico = require('../models/OrdemServico');
+const Prestador = require('../models/Prestador');
 
 class HistoricoServicoController {
   // Criar um novo histórico de serviço
   static async create(req, res) {
     try {
-      const { status, empresaId } = req.body;
+      const { status, acao, empresaId, ordem_servico_id, prestador_id } = req.body;
 
       // Verificar se a empresa existe
       const empresa = await Empresa.findByPk(empresaId);
@@ -13,10 +15,29 @@ class HistoricoServicoController {
         return res.status(404).json({ error: 'Empresa não encontrada' });
       }
 
+      // Verificar se a ordem de serviço existe
+      if (ordem_servico_id) {
+        const ordemServico = await OrdemServico.findByPk(ordem_servico_id);
+        if (!ordemServico) {
+          return res.status(404).json({ error: 'Ordem de serviço não encontrada' });
+        }
+      }
+
+      // Verificar se o prestador existe
+      if (prestador_id) {
+        const prestador = await Prestador.findByPk(prestador_id);
+        if (!prestador) {
+          return res.status(404).json({ error: 'Prestador não encontrado' });
+        }
+      }
+
       // Criar o histórico de serviço
       const historicoServico = await HistoricoServico.create({
         status,
+        acao,
         empresaId,
+        ordem_servico_id,
+        prestador_id,
       });
 
       return res.status(201).json(historicoServico);
@@ -34,6 +55,14 @@ class HistoricoServicoController {
           {
             model: Empresa,
             attributes: ['id', 'nome'], // Ajuste de acordo com os atributos da empresa que você quer retornar
+          },
+          {
+            model: OrdemServico,
+            attributes: ['id', 'descricao'], // Ajuste os campos da OS que deseja retornar
+          },
+          {
+            model: Prestador,
+            attributes: ['id', 'nome'], // Ajuste os campos do Prestador que deseja retornar
           },
         ],
       });
@@ -56,6 +85,14 @@ class HistoricoServicoController {
             model: Empresa,
             attributes: ['id', 'nome'],
           },
+          {
+            model: OrdemServico,
+            attributes: ['id', 'descricao'],
+          },
+          {
+            model: Prestador,
+            attributes: ['id', 'nome'],
+          },
         ],
       });
 
@@ -74,12 +111,30 @@ class HistoricoServicoController {
   static async update(req, res) {
     try {
       const { id } = req.params;
-      const { status, empresaId } = req.body;
+      const { status, acao, empresaId, ordem_servico_id, prestador_id } = req.body;
 
       // Verificar se a empresa existe
-      const empresa = await Empresa.findByPk(empresaId);
-      if (!empresa) {
-        return res.status(404).json({ error: 'Empresa não encontrada' });
+      if (empresaId) {
+        const empresa = await Empresa.findByPk(empresaId);
+        if (!empresa) {
+          return res.status(404).json({ error: 'Empresa não encontrada' });
+        }
+      }
+
+      // Verificar se a ordem de serviço existe
+      if (ordem_servico_id) {
+        const ordemServico = await OrdemServico.findByPk(ordem_servico_id);
+        if (!ordemServico) {
+          return res.status(404).json({ error: 'Ordem de serviço não encontrada' });
+        }
+      }
+
+      // Verificar se o prestador existe
+      if (prestador_id) {
+        const prestador = await Prestador.findByPk(prestador_id);
+        if (!prestador) {
+          return res.status(404).json({ error: 'Prestador não encontrado' });
+        }
       }
 
       const historicoServico = await HistoricoServico.findByPk(id);
@@ -89,7 +144,10 @@ class HistoricoServicoController {
 
       // Atualizar o histórico de serviço
       historicoServico.status = status || historicoServico.status;
+      historicoServico.acao = acao || historicoServico.acao;
       historicoServico.empresaId = empresaId || historicoServico.empresaId;
+      historicoServico.ordem_servico_id = ordem_servico_id || historicoServico.ordem_servico_id;
+      historicoServico.prestador_id = prestador_id || historicoServico.prestador_id;
 
       await historicoServico.save();
 
