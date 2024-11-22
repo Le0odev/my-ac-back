@@ -58,7 +58,7 @@ module.exports = {
       const token = jwt.sign(
         { id: cliente.id, role: cliente.role }, // O payload inclui o ID e o role
         process.env.JWT_SECRET,
-        { expiresIn: '1d' } // Token expira em 1 dia
+        { expiresIn: '7d' } // Token expira em 1 dia
       );
 
       res.json({ token });

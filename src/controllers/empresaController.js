@@ -58,7 +58,7 @@ module.exports = {
             const token = jwt.sign(
                 { id: empresa.id, role: empresa.role || 'empresa' }, // Garante que o role será sempre atribuído
                 process.env.JWT_SECRET, 
-                { expiresIn: '1d' }
+                { expiresIn: '7d' }
             );
 
             res.json({ token });

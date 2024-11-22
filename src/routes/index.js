@@ -8,7 +8,7 @@ const prestadorRoutes = require('./prestadorRoutes');
 const ordemServicoRoutes = require('./ordemServicoRoutes');
 const historicoServicoRoutes = require('./historicoServicoRoutes');
 const RelatorioServicoRoutes = require('./relatorioServicoRoutes');
-
+const estoqueRoutes = require('./estoqueRoutes');
 
 // Usando as rotas nas rotas principais
 router.use(clienteRoutes);
@@ -17,6 +17,6 @@ router.use(prestadorRoutes);
 router.use(ordemServicoRoutes);
 router.use(historicoServicoRoutes);
 router.use(RelatorioServicoRoutes);
-
+router.use(estoqueRoutes);
 
 module.exports = router;
