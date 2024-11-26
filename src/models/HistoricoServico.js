@@ -32,7 +32,7 @@ HistoricoServico.init(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: 'OrdemServicos', // Nome da tabela 'OrdemServicos'
+        model: 'ordens_servico', // Nome da tabela 'OrdemServicos'
         key: 'id', // Chave estrangeira referenciando a chave primária de OrdemServicos
       },
       onUpdate: 'CASCADE',
@@ -42,7 +42,7 @@ HistoricoServico.init(
       type: DataTypes.INTEGER,
       allowNull: true, // Prestador pode ser opcional em algumas ações
       references: {
-        model: 'Prestadores', // Nome da tabela 'Prestadores'
+        model: 'prestadores', // Nome da tabela 'Prestadores'
         key: 'id',
       },
       onUpdate: 'CASCADE',
