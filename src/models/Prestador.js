@@ -62,11 +62,15 @@ Prestador.init(
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',
     },
+    avatar: { 
+      type: DataTypes.STRING,
+      allowNull: true, 
+    },
   },
   {
     sequelize,
     modelName: 'Prestador',
-    tableName: 'prestadores', // Nome da tabela no banco
+    tableName: 'prestadores', 
   }
 );
 

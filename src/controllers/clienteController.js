@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 module.exports = {
-  // Função para cadastrar um novo cliente
   async register(req, res) {
     try {
       const { nome, email, telefone, senha, cpf, endereco, empresaId } = req.body;

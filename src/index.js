@@ -4,9 +4,25 @@ const sequelize = require('./config/database');
 const cors = require('cors');
 const defineAssociations = require('../src/models/associations'); // Importa os relacionamentos
 const routes = require('./routes'); // Importa todas as rotas definidas no arquivo routes/index.js
+const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+
+// Verifica se a pasta de uploads/avatars existe, se não, cria
+const uploadDir = path.join(__dirname, "uploads", "avatars");
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+  console.log("Pasta de uploads/avatars criada com sucesso!");
+} else {
+  console.log("Pasta de uploads/avatars já existe.");
+}
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Configuração de CORS
 const corsOptions = {

@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const prestadorController = require('../controllers/prestadorController');
 const authorize = require('../middlewares/authMiddleware');
+const upload = require('../middlewares/upload'); // Middleware para upload de arquivos
+
 
 // Rota de cadastro
-router.post('/register-prestador', prestadorController.register);
+router.post('/register-prestador', upload.single('avatar'), prestadorController.register);
 
 // Rota de login
 router.post('/login-prestador', prestadorController.login);
