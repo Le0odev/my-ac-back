@@ -98,4 +98,26 @@ module.exports = {
       res.status(500).json({ error: 'Erro ao autenticar prestador' });
     }
   },
+
+  async listPrestadores(req, res) {
+    try {
+      // Buscando todos os prestadores, podendo incluir a empresa associada se necessário
+      const prestadores = await Prestador.findAll({
+        include: [{
+          model: Empresa, // Incluindo informações da empresa associada
+          attributes: ['nome', 'id'], // Escolher os campos da empresa que deseja incluir
+        }],
+      });
+
+      // Verificando se algum prestador foi encontrado
+      if (prestadores.length === 0) {
+        return res.status(404).json({ message: "Nenhum prestador encontrado" });
+      }
+
+      res.status(200).json({ prestadores });
+    } catch (error) {
+      console.error("Erro ao listar prestadores:", error.message);
+      res.status(500).json({ error: "Erro ao listar prestadores", details: error.message });
+    }
+  },
 };

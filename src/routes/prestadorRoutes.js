@@ -11,6 +11,11 @@ router.post('/register-prestador', upload.single('avatar'), prestadorController.
 // Rota de login
 router.post('/login-prestador', prestadorController.login);
 
+router.get('/prestadores', authorize(['empresa']), (req, res) => {
+  prestadorController.listPrestadores(req, res);
+});
+
+
 // Rota protegida - Acesso somente para prestadores
 router.get('/prestador-dashboard', authorize(['prestador']), (req, res) => {
     res.json({ message: 'Bem-vindo ao painel do prestador!' });

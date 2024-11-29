@@ -12,6 +12,10 @@ router.get('/cliente-dashboard', authorize(['cliente']), (req, res) => {
     res.json({ message: 'Bem-vindo ao painel do cliente!' });
   });
 
+  router.get('/clientes', authorize(['empresa']), (req, res) => {
+    clienteController.listClientes(req, res);
+});
+
 
 router.get('/cliente/:id', authorize(['empresa']), (req, res) => {
     clienteController.getCliente(req, res);
