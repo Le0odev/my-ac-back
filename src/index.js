@@ -27,7 +27,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 // Configuração de CORS
 const corsOptions = {
   origin: ['http://localhost:5173', 'http://192.168.18.4:5173'],
-  methods: ['GET', 'POST'], // Permitindo métodos GET e POST
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], // Permitir esses métodos
   allowedHeaders: ['Content-Type', 'Authorization'], // Permitindo certos cabeçalhos
 };
 app.use(cors(corsOptions));
