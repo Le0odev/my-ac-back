@@ -38,4 +38,10 @@ router.delete(
   RelatorioServicoController.delete
 );
 
+router.get(
+  '/relatorios-servico/empresa/:empresaId',
+  authorize(['prestador', 'empresa']), // Permissões necessárias
+  RelatorioServicoController.listByEmpresa // Chama o método que criamos
+);
+
 module.exports = router;
