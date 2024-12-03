@@ -15,6 +15,12 @@ router.get('/prestadores', authorize(['empresa']), (req, res) => {
   prestadorController.listPrestadores(req, res);
 });
 
+router.get(
+  '/prestadores/empresa/:empresaId',
+  authorize(['empresa']),
+  prestadorController.listPrestadoresPorEmpresa
+);
+
 
 // Rota protegida - Acesso somente para prestadores
 router.get('/prestador-dashboard', authorize(['prestador']), (req, res) => {

@@ -120,4 +120,35 @@ module.exports = {
       res.status(500).json({ error: "Erro ao listar prestadores", details: error.message });
     }
   },
+
+  async listPrestadoresPorEmpresa(req, res) {
+    try {
+        const { empresaId } = req.params; // Pega o ID da empresa da URL
+
+        // Verifica se a empresa existe
+        const empresa = await Empresa.findByPk(empresaId);
+        if (!empresa) {
+            return res.status(404).json({ message: "Empresa não encontrada" });
+        }
+
+        // Busca os prestadores associados à empresa
+        const prestadores = await Prestador.findAll({
+            where: { empresaId }, // Filtra pelo ID da empresa
+            include: [{
+                model: Empresa,
+                attributes: ['nome', 'id'], // Inclui informações da empresa associada
+            }],
+        });
+
+        // Verifica se há prestadores associados
+        if (prestadores.length === 0) {
+            return res.status(404).json({ message: "Nenhum prestador encontrado para esta empresa" });
+        }
+
+        res.status(200).json({ prestadores });
+    } catch (error) {
+        console.error("Erro ao listar prestadores por empresa:", error.message);
+        res.status(500).json({ error: "Erro ao listar prestadores por empresa", details: error.message });
+    }
+}
 };
