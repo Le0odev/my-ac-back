@@ -11,15 +11,12 @@ router.post('/register-prestador', upload.single('avatar'), prestadorController.
 // Rota de login
 router.post('/login-prestador', prestadorController.login);
 
-router.get('/prestadores', authorize(['empresa']), (req, res) => {
-  prestadorController.listPrestadores(req, res);
+router.get('/prestadores/:empresaId', authorize(['empresa']), (req, res) => {
+  prestadorController.listPrestadoresPorEmpresa(req, res);
 });
 
-router.get(
-  '/prestadores/empresa/:empresaId',
-  authorize(['empresa']),
-  prestadorController.listPrestadoresPorEmpresa
-);
+
+
 
 
 // Rota protegida - Acesso somente para prestadores

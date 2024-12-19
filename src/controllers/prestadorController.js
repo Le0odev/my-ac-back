@@ -123,7 +123,12 @@ module.exports = {
 
   async listPrestadoresPorEmpresa(req, res) {
     try {
-        const { empresaId } = req.params; // Pega o ID da empresa da URL
+        const { empresaId } = req.params;
+
+        // Verifica se o ID é válido
+        if (!empresaId || isNaN(Number(empresaId))) {
+            return res.status(400).json({ message: "ID da empresa inválido" });
+        }
 
         // Verifica se a empresa existe
         const empresa = await Empresa.findByPk(empresaId);
@@ -131,24 +136,31 @@ module.exports = {
             return res.status(404).json({ message: "Empresa não encontrada" });
         }
 
-        // Busca os prestadores associados à empresa
-        const prestadores = await Prestador.findAll({
-            where: { empresaId }, // Filtra pelo ID da empresa
+        // Busca prestadores associados à empresa
+        const { count, rows: prestadores } = await Prestador.findAndCountAll({
+            where: { empresaId },
             include: [{
                 model: Empresa,
                 attributes: ['nome', 'id'], // Inclui informações da empresa associada
             }],
         });
 
-        // Verifica se há prestadores associados
-        if (prestadores.length === 0) {
+        // Verifica se há prestadores
+        if (count === 0) {
             return res.status(404).json({ message: "Nenhum prestador encontrado para esta empresa" });
         }
 
-        res.status(200).json({ prestadores });
+        res.status(200).json({
+            success: true,
+            data: { prestadores },
+        });
     } catch (error) {
-        console.error("Erro ao listar prestadores por empresa:", error.message);
-        res.status(500).json({ error: "Erro ao listar prestadores por empresa", details: error.message });
+        console.error("Erro ao listar prestadores por empresa:", error);
+        res.status(500).json({
+            success: false,
+            error: "Erro ao listar prestadores por empresa",
+            details: error.message,
+        });
     }
 }
 };
