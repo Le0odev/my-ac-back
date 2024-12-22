@@ -33,4 +33,16 @@ router.delete(
   OrdemServicoController.deleteServiceOrder
 );
 
+router.get(
+  '/ordens-servico/stats/:empresaId',
+  authorize(['empresa']),
+  OrdemServicoController.getQuickStats
+)
+
+router.get(
+  '/ordens-servico/recentOrders/:empresaId',
+  authorize(['empresa']),
+  OrdemServicoController.getRecentOrders
+)
+
 module.exports = router;
