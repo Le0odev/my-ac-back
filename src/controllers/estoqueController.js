@@ -1,5 +1,6 @@
 const { Op } = require('sequelize');
 const Estoque = require('../models/Estoque');
+const Empresa = require('../models/Empresa');
 
 class EstoqueController {
   // Criar um novo item no estoque
@@ -19,7 +20,20 @@ class EstoqueController {
         data_validade,
         empresaId,
       } = req.body;
-
+  
+      // Verifica se o código interno já existe
+      const itemExistente = await Estoque.findOne({ where: { codigo_interno } });
+      if (itemExistente) {
+        return res.status(400).json({ 
+          error: 'Já existe um item com este código interno.' 
+        });
+      }
+  
+      const empresa = await Empresa.findByPk(empresaId);
+      if (!empresa) {
+        return res.status(404).json({ error: 'Empresa não encontrada' });
+      }
+  
       const novoItem = await Estoque.create({
         nome_produto,
         descricao,
@@ -34,13 +48,18 @@ class EstoqueController {
         data_validade,
         empresaId,
       });
-
+  
       return res.status(201).json({ message: 'Item criado com sucesso!', item: novoItem });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao criar item no estoque.', error: error.message });
+      return res.status(500).json({
+        message: 'Erro ao criar item no estoque.',
+        error: error.message,
+      });
     }
   }
+  
+  
 
   // Registrar consumo de um item do estoque
   static async registrarConsumo(req, res) {
