@@ -3,26 +3,19 @@ const Empresa = require('../models/Empresa');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-
 module.exports = {
   async register(req, res) {
     try {
       console.log("Dados recebidos:", req.body);
       const { 
         nome, email, senha, empresaId, cpf, status, 
-        especialidade, anos_experiencia, certificados, telefone 
+        especialidade, anos_experiencia, certificados, telefone,
+        avatarUrl 
       } = req.body;
   
       // Validação de campos obrigatórios
       if (!nome || !email || !senha || !cpf || !empresaId) {
         return res.status(400).json({ message: "Campos obrigatórios faltando!" });
-      }
-  
-      // Verificando se o arquivo foi enviado
-      let avatarUrl = null;
-      if (req.file) {
-        avatarUrl = `/uploads/avatars/${req.file.filename}`;
-        console.log("Avatar salvo em:", avatarUrl);
       }
   
       // Verificando se a empresa existe
@@ -49,12 +42,12 @@ module.exports = {
         senha: hashedPassword,
         cpf,
         empresaId,
-        status: status || 'ativo', // Definindo status como "ativo" por padrão
+        status: status || 'ativo',
         especialidade,
         anos_experiencia,
         certificados,
         telefone,
-        avatar: avatarUrl, // Salva o caminho do avatar
+        avatar: req.body.avatarUrl || null,
       });
   
       console.log("Prestador criado com sucesso:", novoPrestador);
@@ -162,5 +155,5 @@ module.exports = {
             details: error.message,
         });
     }
-}
+  }
 };
