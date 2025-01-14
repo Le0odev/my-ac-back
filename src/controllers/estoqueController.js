@@ -92,20 +92,30 @@ class EstoqueController {
     }
   }
 
-  // Listar todos os itens do estoque
-  static async list(req, res) {
-    try {
-      const { empresaId } = req.query;
+// Listar itens do estoque por empresa
+static async listItemsByCompany(req, res) {
+  try {
+    const { empresaId } = req.params;
 
-      const whereClause = empresaId ? { empresaId } : {}; // Filtrar por empresa, se fornecido
-      const itens = await Estoque.findAll({ where: whereClause });
-
-      return res.status(200).json(itens);
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Erro ao listar itens do estoque.', error: error.message });
+    // Verificar se a empresa existe
+    const company = await Empresa.findByPk(empresaId);
+    if (!company) {
+      return res.status(404).json({ error: 'Empresa não encontrada' });
     }
+
+    // Buscar os itens de estoque para a empresa
+    const items = await Estoque.findAll({
+      where: { empresaId }, // Filtrar pelo ID da empresa
+    });
+
+    return res.status(200).json(items);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Erro ao buscar itens do estoque' });
   }
+}
+
+
 
   // Buscar item do estoque por ID
   static async getById(req, res) {

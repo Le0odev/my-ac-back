@@ -10,12 +10,14 @@ router.post(
   EstoqueController.create
 );
 
-// Empresas e prestadores podem listar itens do estoque
+
+// Empresas e prestadores da mesma empresa podem listar itens do estoque
 router.get(
-  '/estoque',
-  authorize(['empresa', 'prestador']),
-  EstoqueController.list
+  '/estoque/:empresaId',
+  authorize(['empresa', 'prestador']), // Permitir acesso a empresas e prestadores
+  EstoqueController.listItemsByCompany // Usar o método que verifica o vínculo
 );
+
 
 // Empresas e prestadores podem buscar um item específico do estoque por ID
 router.get(
