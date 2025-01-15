@@ -114,6 +114,73 @@ module.exports = {
     }
   },
 
+  async updatePrestador(req, res) {
+    try {
+        const { id } = req.params;
+        const {
+            nome, email, senha, status, especialidade,
+            anos_experiencia, certificados, telefone, avatarUrl
+        } = req.body;
+
+        // Verificar se o prestador existe
+        const prestador = await Prestador.findByPk(id);
+        if (!prestador) {
+            return res.status(404).json({ message: "Prestador não encontrado" });
+        }
+
+        // Se um novo email for fornecido, verificar se já não está em uso
+        if (email && email !== prestador.email) {
+            const emailExistente = await Prestador.findOne({ where: { email } });
+            if (emailExistente) {
+                return res.status(400).json({ message: "Email já está em uso" });
+            }
+        }
+
+        // Preparar objeto de atualização
+        const updateData = {};
+        
+        // Adicionar campos apenas se foram fornecidos
+        if (nome) updateData.nome = nome;
+        if (email) updateData.email = email;
+        if (status) updateData.status = status;
+        if (especialidade) updateData.especialidade = especialidade;
+        if (anos_experiencia) updateData.anos_experiencia = anos_experiencia;
+        if (certificados) updateData.certificados = certificados;
+        if (telefone) updateData.telefone = telefone;
+        if (avatarUrl) updateData.avatar = avatarUrl;
+
+        // Se uma nova senha for fornecida, fazer o hash
+        if (senha) {
+            updateData.senha = await bcrypt.hash(senha, 10);
+        }
+
+        // Atualizar o prestador
+        await prestador.update(updateData);
+
+        // Buscar o prestador atualizado com as informações da empresa
+        const prestadorAtualizado = await Prestador.findByPk(id, {
+            include: [{
+                model: Empresa,
+                attributes: ['nome', 'id'],
+            }],
+            // Excluir a senha da resposta
+            attributes: { exclude: ['senha'] }
+        });
+
+        res.status(200).json({
+            message: "Prestador atualizado com sucesso",
+            prestador: prestadorAtualizado
+        });
+
+    } catch (error) {
+        console.error("Erro ao atualizar prestador:", error);
+        res.status(500).json({
+            error: "Erro ao atualizar prestador",
+            details: error.message
+        });
+    }
+},
+
   async listPrestadoresPorEmpresa(req, res) {
     try {
         const { empresaId } = req.params;
@@ -155,5 +222,21 @@ module.exports = {
             details: error.message,
         });
     }
+  },
+
+  async getPrestadorById (id, empresaId) {
+    try {
+      const prestador = await Prestador.findOne({
+        where: { 
+          id: id,
+          empresaId: empresaId
+        }
+      });
+      return prestador;
+    } catch (error) {
+      console.error('Error in getPrestadorById:', error);
+      throw error;
+    }
   }
+
 };
