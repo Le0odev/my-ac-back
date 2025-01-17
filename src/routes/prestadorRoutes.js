@@ -37,18 +37,7 @@ router.get('/prestador-dashboard', authorize(['prestador']), (req, res) => {
     res.json({ message: 'Bem-vindo ao painel do prestador!' });
 });
 
-router.get('/prestadores/:id', authorize(['empresa', 'prestador']), async (req, res) => {
-  try {
-    const prestador = await prestadorController.getPrestadorById(req.params.id, req.query.empresaId);
-    if (!prestador) {
-      return res.status(404).json({ message: 'Prestador não encontrado' });
-    }
-    res.json(prestador);
-  } catch (error) {
-    console.error('Error fetching prestador:', error);
-    res.status(500).json({ message: 'Erro ao buscar prestador' });
-  }
-});
+router.get('/prestador/:prestadorId', authorize, prestadorController.getPrestadorDetails);
 
 
 module.exports = router;

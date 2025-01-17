@@ -224,19 +224,53 @@ module.exports = {
     }
   },
 
-  async getPrestadorById (id, empresaId) {
+  async getPrestadorDetails(req, res) {
     try {
+      const { prestadorId } = req.params;
+      
+      // Pega o empresaId do token do usuário logado
+      const empresaId = req.user.empresaId; // Assumindo que você tem middleware de autenticação
+  
+      // Validação do ID do prestador
+      if (!prestadorId) {
+        return res.status(400).json({ 
+          message: "ID do prestador é obrigatório" 
+        });
+      }
+  
+      // Busca o prestador específico validando a empresa
       const prestador = await Prestador.findOne({
         where: { 
-          id: id,
-          empresaId: empresaId
+          id: prestadorId,
+          empresaId: empresaId // Garante que só retorna prestador da empresa do usuário
+        },
+        include: [{
+          model: Empresa,
+          attributes: ['nome', 'id']
+        }],
+        attributes: { 
+          exclude: ['senha'] 
         }
       });
-      return prestador;
+  
+      if (!prestador) {
+        return res.status(404).json({ 
+          message: "Prestador não encontrado ou sem permissão para acessar" 
+        });
+      }
+  
+      res.status(200).json({
+        success: true,
+        data: prestador
+      });
+  
     } catch (error) {
-      console.error('Error in getPrestadorById:', error);
-      throw error;
+      console.error("Erro ao buscar detalhes do prestador:", error);
+      res.status(500).json({
+        success: false,
+        error: "Erro ao buscar detalhes do prestador",
+        details: error.message
+      });
     }
   }
-
 };
