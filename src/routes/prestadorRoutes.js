@@ -16,21 +16,9 @@ router.get('/prestadores/:empresaId', authorize(['empresa']), (req, res) => {
 });
 
 router.put('/prestador/:id', authorize(['prestador', 'empresa']), async (req, res) => {
-  // Verifica se é um prestador tentando editar
-  if (req.user.role === 'prestador' && req.user.id !== parseInt(req.params.id)) {
-      return res.status(403).json({ message: 'Prestador só pode atualizar seu próprio perfil' });
-  }
-  
-  // Se for empresa, verifica se o prestador pertence a ela
-  if (req.user.role === 'empresa') {
-      const prestador = await Prestador.findByPk(req.params.id);
-      if (!prestador || prestador.empresaId !== req.user.id) {
-          return res.status(403).json({ message: 'Empresa só pode atualizar prestadores vinculados a ela' });
-      }
-  }
-  
   await prestadorController.updatePrestador(req, res);
 });
+
 
 // Rota protegida - Acesso somente para prestadores
 router.get('/prestador-dashboard', authorize(['prestador']), (req, res) => {
