@@ -224,6 +224,39 @@ module.exports = {
     }
   },
 
+  async deletePrestador(req, res) {
+    try {
+      const { id, empresaId } = req.params; // Agora o empresaId vem dos params
+  
+      // Verificando se o ID do prestador foi fornecido corretamente
+      if (!id || isNaN(Number(id))) {
+        return res.status(400).json({ message: "ID do prestador inválido" });
+      }
+  
+      // Verificando se o prestador existe
+      const prestador = await Prestador.findByPk(id);
+      if (!prestador) {
+        return res.status(404).json({ message: "Prestador não encontrado" });
+      }
+  
+      // Verificando se o prestador pertence à empresa fornecida no parâmetro
+      if (prestador.empresaId !== Number(empresaId)) {
+        return res.status(403).json({ message: "Acesso negado. Prestador não pertence à sua empresa." });
+      }
+  
+      // Removendo o prestador
+      await prestador.destroy();
+  
+      res.status(200).json({ message: "Prestador excluído com sucesso" });
+    } catch (error) {
+      console.error("Erro ao excluir prestador:", error.message);
+      res.status(500).json({ 
+        error: "Erro ao excluir prestador", 
+        details: error.message 
+      });
+    }
+  },
+  
   async getPrestadorDetails(req, res) {
     try {
       const { prestadorId } = req.params;

@@ -27,5 +27,9 @@ router.get('/prestador-dashboard', authorize(['prestador']), (req, res) => {
 
 router.get('/prestador/:prestadorId', authorize, prestadorController.getPrestadorDetails);
 
+router.delete(
+  "/prestadores/:id/:empresaId",  // Agora o `empresaId` vem como parâmetro
+  prestadorController.deletePrestador // Controlador para excluir o prestador
+);
 
 module.exports = router;
