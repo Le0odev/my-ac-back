@@ -204,9 +204,48 @@ class OrdemServicoController {
     }
   }
 
+  static async getOrdersForPrestador(req, res) {
+    try {
+      const { prestadorId } = req.params
 
+      // Verificar se o prestador existe
+      const prestador = await Prestador.findByPk(prestadorId)
+      if (!prestador) {
+        return res.status(404).json({ error: "Prestador não encontrado" })
+      }
 
+      // Buscar as ordens de serviço para o prestador
+      const orders = await OrdemServico.findAll({
+        where: { prestador_id: prestadorId },
+        include: [
+          { model: Cliente, as: "Cliente", attributes: ["id", "nome"] },
+          { model: Empresa, as: "Empresa", attributes: ["id", "nome"] },
+        ],
+        order: [["createdAt", "DESC"]],
+      })
+
+      // Calcular estatísticas
+      const totalOrders = orders.length
+      const activeOrders = orders.filter((order) => order.status !== "concluido").length
+      const completedOrders = orders.filter((order) => order.status === "concluido").length
+      const totalEarnings = orders.reduce((sum, order) => sum + (Number.parseFloat(order.valor) || 0), 0)
+
+      return res.status(200).json({
+        orders,
+        stats: {
+          totalOrders,
+          activeOrders,
+          completedOrders,
+          totalEarnings: totalEarnings.toFixed(2),
+        },
+      })
+    } catch (error) {
+      console.error("Erro ao obter ordens do prestador:", error)
+      return res.status(500).json({ error: "Erro ao obter ordens do prestador" })
+    }
+  }
 }
+
 
 
 

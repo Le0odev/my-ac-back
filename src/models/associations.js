@@ -48,4 +48,7 @@ module.exports = () => {
   // Relacionamento OrdemServico e Prestador (com alias)
   Prestador.hasMany(OrdemServico, { foreignKey: 'prestador_id', as: 'ordens' });
   OrdemServico.belongsTo(Prestador, { foreignKey: 'prestador_id', as: 'Prestador' });
+
+  OrdemServico.belongsTo(Empresa, { foreignKey: 'empresaId', as: 'Empresa' });
+
 };

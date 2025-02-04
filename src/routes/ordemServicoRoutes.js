@@ -45,4 +45,10 @@ router.get(
   OrdemServicoController.getRecentOrders
 )
 
+router.get(
+  '/ordens-servico/prestador/:prestadorId',
+  authorize(['prestador']),
+  OrdemServicoController.getOrdersForPrestador
+);
+
 module.exports = router;
