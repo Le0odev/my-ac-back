@@ -20,16 +20,17 @@ router.put('/prestador/:id', authorize(['prestador', 'empresa']), async (req, re
 });
 
 
-// Rota protegida - Acesso somente para prestadores
 router.get('/prestador-dashboard', authorize(['prestador']), (req, res) => {
     res.json({ message: 'Bem-vindo ao painel do prestador!' });
 });
 
-router.get('/prestador/:prestadorId', authorize, prestadorController.getPrestadorDetails);
+router.get('/prestadores/:prestadorId', authorize(['prestador']), prestadorController.getPrestadorDetails);
+
+router.get('/prestadores/prestador/:prestadorId?', authorize(['prestador']), prestadorController.getLoggedPrestadorDetails);
 
 router.delete(
-  "/prestadores/:id/:empresaId",  // Agora o `empresaId` vem como parâmetro
-  prestadorController.deletePrestador // Controlador para excluir o prestador
+  "/prestadores/:id/:empresaId",  
+  prestadorController.deletePrestador 
 );
 
 module.exports = router;

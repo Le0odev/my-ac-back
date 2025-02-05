@@ -262,7 +262,7 @@ module.exports = {
       const { prestadorId } = req.params;
       
       // Pega o empresaId do token do usuário logado
-      const empresaId = req.user.empresaId; // Assumindo que você tem middleware de autenticação
+      const empresaId = req.user.empresaId; 
   
       // Validação do ID do prestador
       if (!prestadorId) {
@@ -275,7 +275,7 @@ module.exports = {
       const prestador = await Prestador.findOne({
         where: { 
           id: prestadorId,
-          empresaId: empresaId // Garante que só retorna prestador da empresa do usuário
+          empresaId: empresaId 
         },
         include: [{
           model: Empresa,
@@ -296,6 +296,48 @@ module.exports = {
         success: true,
         data: prestador
       });
+  
+    } catch (error) {
+      console.error("Erro ao buscar detalhes do prestador:", error);
+      res.status(500).json({
+        success: false,
+        error: "Erro ao buscar detalhes do prestador",
+        details: error.message
+      });
+    }
+  },
+
+
+  async getLoggedPrestadorDetails(req, res) {
+    try {
+      // Obtém o ID do prestador da URL ou do token do usuário logado
+      const prestadorId = req.params.prestadorId || req.user?.id;
+  
+      if (!prestadorId) {
+        return res.status(403).json({ 
+          message: "Usuário não autorizado" 
+        });
+      }
+  
+      // Busca os detalhes do prestador
+      const prestador = await Prestador.findOne({
+        where: { id: prestadorId },
+        include: [{
+          model: Empresa,
+          attributes: ['nome', 'id']
+        }],
+        attributes: { 
+          exclude: ['senha'] 
+        }
+      });
+  
+      if (!prestador) {
+        return res.status(404).json({ 
+          message: "Prestador não encontrado" 
+        });
+      }
+  
+      res.status(200).json(prestador);
   
     } catch (error) {
       console.error("Erro ao buscar detalhes do prestador:", error);
