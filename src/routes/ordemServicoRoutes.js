@@ -51,4 +51,6 @@ router.get(
   OrdemServicoController.getOrdersForPrestador
 );
 
+router.get('/ordens-servico/prestador/:prestadorId/agenda', OrdemServicoController.getAgendaForPrestador);
+
 module.exports = router;

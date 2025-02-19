@@ -3,6 +3,8 @@ const Empresa = require('../models/Empresa');
 const Cliente = require('../models/Cliente');
 const Prestador = require('../models/Prestador');
 const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
+
 
 
 class OrdemServicoController {
@@ -201,6 +203,39 @@ class OrdemServicoController {
     } catch (error) {
       console.error("Erro ao obter ordens recentes:", error);
       return res.status(500).json({ error: 'Erro ao obter ordens recentes' });
+    }
+  }
+ 
+  static async getAgendaForPrestador(req, res) {
+    try {
+      const { prestadorId } = req.params;
+      const { start, end } = req.query;
+  
+      const prestador = await Prestador.findByPk(prestadorId);
+      if (!prestador) {
+        return res.status(404).json({ error: "Prestador não encontrado"});
+      }
+      
+      const startDate = new Date(start);
+      const endDate = new Date(end);
+  
+      const ordens = await OrdemServico.findAll({
+        where: {
+          prestador_id: prestadorId,
+          data_estimativa: {
+            [Op.gte]: startDate,
+            [Op.lte]: endDate,
+          },
+        },
+        include: [
+          { model: Cliente, as: "Cliente", attributes: ["id", "nome"] },
+        ],
+        order: [["data_estimativa", "ASC"]],
+      });
+      return res.status(200).json(ordens); 
+    } catch (error) {
+      console.error("Erro ao buscar agenda do prestador", error);
+      return res.status(500).json({ error: "Erro ao buscar agenda do prestador"})
     }
   }
 
