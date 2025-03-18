@@ -22,7 +22,7 @@ router.get(
 // Apenas administradores e usuários com o role 'empresa' podem atualizar ordens de serviço
 router.put(
   '/ordens-servico/:id',
-  authorize(['empresa']),
+  authorize(['empresa', 'prestador']),
   OrdemServicoController.updateServiceOrder
 );
 
